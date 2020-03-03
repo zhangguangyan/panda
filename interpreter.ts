@@ -40,5 +40,13 @@ function evalBinaryExpression(node: any) {
     switch (op) {
         case "+":
             return left + right;
+        case "-":
+            return left - right;
+        case "*":
+            return left * right;
+        case "/":
+            return left / right;
+        default:
+            throw new Error(left + op + right)
     }
 }
