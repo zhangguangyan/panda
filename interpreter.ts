@@ -6,6 +6,8 @@ export function evaluate(node: any):any {
             return evalStatements(node.body);
         case "ExpressionStatement":
             return evalExpressionStatement(node);
+        case "BinaryExpression":
+            return evalBinaryExpression(node);
         case "Literal":
             return evalLiteral(node);
         default:
@@ -29,4 +31,14 @@ function evalExpressionStatement(node: any) {
 
 function evalLiteral(node: any) {
     return node.value;
+}
+
+function evalBinaryExpression(node: any) {
+    const left = evaluate(node.left);
+    const op = node.operator;
+    const right = evaluate(node.right);
+    switch (op) {
+        case "+":
+            return left + right;
+    }
 }

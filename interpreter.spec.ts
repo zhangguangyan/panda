@@ -11,3 +11,13 @@ test('integer literal', () => {
   const actual = evaluate(ast);
   expect(actual).toBe(5);
 });
+test('binary expression', () => {
+  const source = `
+7
+6
+5 + 4
+  `;
+  const ast = acorn.parse(source);
+  const actual = evaluate(ast);
+  expect(actual).toBe(9);
+});
