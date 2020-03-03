@@ -1,4 +1,4 @@
-import * as acorn from 'acorn';
+import { myprint } from './built-in';
 
 const globalScope = new Map();
 
@@ -10,6 +10,8 @@ export function evaluate(node: any): any {
             return evalExpressionStatement(node);
         case "BinaryExpression":
             return evalBinaryExpression(node);
+        case "CallExpression":
+            return evalCallExpression(node);
         case "VariableDeclaration":
             return evalVariableDeclaration(node);
         case "VariableDeclarator":
@@ -56,6 +58,17 @@ function evalBinaryExpression(node: any) {
             return left / right;
         default:
             throw new Error(left + op + right)
+    }
+}
+
+function evalCallExpression(node:any) {
+    const args = [];
+    for (const arg of node.arguments) {
+        const r = evaluate(arg);
+        args.push(r);
+    }
+    if (node.callee.name === "print") {
+        return myprint(args[0], args[1]);
     }
 }
 

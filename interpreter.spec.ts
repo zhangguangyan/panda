@@ -67,3 +67,23 @@ test('variable not defined', () => {
     expect(e.message).toBe('b not defined')
   }
 })
+
+test('function call', () => {
+  const source = `
+    print(1,3+4)
+  `
+  const ast = acorn.parse(source);
+  const actual = evaluate(ast);
+  expect(actual).toBe("haha 1, 7")
+})
+
+test('function call with variables', () => {
+  const source = `
+  var a = 2
+  var b = 5
+    print(1,a+b)
+  `
+  const ast = acorn.parse(source);
+  const actual = evaluate(ast);
+  expect(actual).toBe("haha 1, 7")
+})
