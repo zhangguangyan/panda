@@ -1,6 +1,8 @@
 import * as acorn from 'acorn';
 
-export function evaluate(node: any):any {
+const globalScope = new Map();
+
+export function evaluate(node: any): any {
     switch (node.type) {
         case "Program":
             return evalStatements(node.body);
@@ -8,6 +10,12 @@ export function evaluate(node: any):any {
             return evalExpressionStatement(node);
         case "BinaryExpression":
             return evalBinaryExpression(node);
+        case "VariableDeclaration":
+            return evalVariableDeclaration(node);
+        case "VariableDeclarator":
+            return evalVariableDeclarator(node);
+        case "Identifier":
+            return evalIdentifier(node);
         case "Literal":
             return evalLiteral(node);
         default:
@@ -48,5 +56,26 @@ function evalBinaryExpression(node: any) {
             return left / right;
         default:
             throw new Error(left + op + right)
+    }
+}
+
+function evalVariableDeclaration(node: any) {
+    for (const declaration of node.declarations) {
+        evalVariableDeclarator(declaration);
+    }
+}
+
+function evalVariableDeclarator(node: any) {
+    const id = node.id.name;
+    const value = evaluate(node.init);
+    globalScope.set(id, value);
+}
+
+function evalIdentifier(node: any) {
+    const name = node.name;
+    if (globalScope.get(name)) {
+        return globalScope.get(name);
+    } else {
+        throw new Error(`${name} not defined`);
     }
 }
