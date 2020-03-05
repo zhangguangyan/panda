@@ -70,11 +70,7 @@ function evalBinaryExpression(node: any) {
 }
 
 function evalCallExpression(node: any) {
-    const args: any[]= [];
-    for (const arg of node.arguments) {
-        const r = evaluate(arg);
-        args.push(r);
-    }
+    const args = node.arguments.map((arg: any) => evaluate(arg))
     const callee = node.callee.name;
     if (callee === "print") {
         return myprint(args[0], args[1]);
