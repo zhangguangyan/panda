@@ -16,6 +16,10 @@ export function evaluate(node: any): any {
             return evalVariableDeclaration(node);
         case "VariableDeclarator":
             return evalVariableDeclarator(node);
+        case "FunctionDeclaration":
+            return evalFunctionDeclaration(node);
+        case "BlockStatement":
+            return evalBlockStatement(node);
         case "Identifier":
             return evalIdentifier(node);
         case "Literal":
@@ -67,8 +71,12 @@ function evalCallExpression(node:any) {
         const r = evaluate(arg);
         args.push(r);
     }
-    if (node.callee.name === "print") {
+    const callee = node.callee.name;
+    if (callee === "print") {
         return myprint(args[0], args[1]);
+    } else {
+        const func = globalScope.get(callee);
+        return evaluate(func.body);
     }
 }
 
@@ -82,6 +90,16 @@ function evalVariableDeclarator(node: any) {
     const id = node.id.name;
     const value = evaluate(node.init);
     globalScope.set(id, value);
+}
+
+function evalFunctionDeclaration(node: any) {
+    const id = node.id.name;
+    globalScope.set(id, node);
+    return node;
+}
+
+function evalBlockStatement(node: any) {
+    return evalStatements(node.body);
 }
 
 function evalIdentifier(node: any) {
