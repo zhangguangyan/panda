@@ -5,7 +5,7 @@ const globalScope = new Map();
 export function evaluate(node: any): any {
     switch (node.type) {
         case "Program":
-            return evalStatements(node.body);
+            return evalProgram(node);
         case "ExpressionStatement":
             return evalExpressionStatement(node);
         case "BinaryExpression":
@@ -27,6 +27,10 @@ export function evaluate(node: any): any {
         default:
             throw new Error("????");
     }
+}
+
+function evalProgram(node: any) {
+    return evalStatements(node.body);
 }
 
 function evalStatements(statements: any[]) {
