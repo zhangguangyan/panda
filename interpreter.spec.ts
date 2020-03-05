@@ -104,4 +104,18 @@ describe("with function declaration", () => {
     const actual = evaluate(ast);
     expect(actual).toBe(3)
   });
+
+  test("function declaration parameters", () => {
+    const source = `
+    function f(x, y) {
+      var a = x + 1;
+      var b = y + 2;
+      a +b;
+    }
+    f(1,2);
+   `
+    const ast = acorn.parse(source);
+    const actual = evaluate(ast);
+    expect(actual).toBe(6)
+  });
 });

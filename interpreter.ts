@@ -69,8 +69,8 @@ function evalBinaryExpression(node: any) {
     }
 }
 
-function evalCallExpression(node:any) {
-    const args = [];
+function evalCallExpression(node: any) {
+    const args: any[]= [];
     for (const arg of node.arguments) {
         const r = evaluate(arg);
         args.push(r);
@@ -78,9 +78,14 @@ function evalCallExpression(node:any) {
     const callee = node.callee.name;
     if (callee === "print") {
         return myprint(args[0], args[1]);
-    } else {
+    } else if (globalScope.get(callee)) {
         const func = globalScope.get(callee);
+        func.params.forEach((param: any, index: number) => {
+            globalScope.set(param.name, args[index]);
+        });
         return evaluate(func.body);
+    } else {
+        throw new Error(`Error: ${node}`);
     }
 }
 
