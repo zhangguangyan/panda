@@ -119,3 +119,75 @@ describe("with function declaration", () => {
     expect(actual).toBe(6)
   });
 });
+
+describe("object expression", () => {
+  test("simple object", () => {
+    const source = `
+    var a = {
+      k1: "123",
+      k2: "456",
+      k3: 789,
+    }
+    a
+    `
+    const ast = acorn.parse(source);
+    const acutal = evaluate(ast);
+    expect(acutal).toEqual({
+      k1: "123",
+      k2: "456",
+      k3: 789
+    });
+  });
+  test("nested object", () => {
+    const source = `
+    var a = {
+      k1: "123",
+      k2: "456",
+      k3: {
+        n1: 123,
+        n2: "456",
+        n3: 789
+      },
+    }
+    a
+    `
+    const ast = acorn.parse(source);
+    const acutal = evaluate(ast);
+    expect(acutal).toEqual({
+      k1: "123",
+      k2: "456",
+      k3: {
+        n1: 123,
+        n2: "456",
+        n3: 789
+      }
+    });
+  });
+  test("object value is expression", () => {
+    const source = `
+    var x = 10;
+    var y = 20;
+    var a = {
+      k1: "123",
+      k2: 5 + 6,
+      k3: {
+        n1: 123,
+        n2: "456",
+        n3: x + y
+      },
+    }
+    a
+    `
+    const ast = acorn.parse(source);
+    const acutal = evaluate(ast);
+    expect(acutal).toEqual({
+      k1: "123",
+      k2: 11,
+      k3: {
+        n1: 123,
+        n2: "456",
+        n3: 30
+      }
+    });
+  });
+});

@@ -20,12 +20,14 @@ export function evaluate(node: any): any {
             return evalFunctionDeclaration(node);
         case "BlockStatement":
             return evalBlockStatement(node);
+        case "ObjectExpression":
+            return evalObjectExpression(node);
         case "Identifier":
             return evalIdentifier(node);
         case "Literal":
             return evalLiteral(node);
         default:
-            throw new Error("????");
+            throw new Error(node.type);
     }
 }
 
@@ -105,6 +107,14 @@ function evalFunctionDeclaration(node: any) {
 
 function evalBlockStatement(node: any) {
     return evalStatements(node.body);
+}
+
+
+function evalObjectExpression(node: any) {
+    return node.properties.reduce((a: any, current: any) => ({
+        ...a,
+        ...{ [current.key.name]: evaluate(current.value) }
+    }), {});
 }
 
 function evalIdentifier(node: any) {
