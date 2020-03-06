@@ -38,10 +38,10 @@ function evalProgram(node: any) {
 }
 
 function evalStatements(statements: any[]) {
-    let result
+    let result;
     for (const statement of statements) {
         result = evaluate(statement);
-        console.log(result);
+        // console.log(result);
     }
     // return the value of last statement
     return result;
@@ -69,12 +69,12 @@ function evalBinaryExpression(node: any) {
         case "/":
             return left / right;
         default:
-            throw new Error(left + op + right)
+            throw new Error(left + op + right);
     }
 }
 
 function evalCallExpression(node: any) {
-    const args = node.arguments.map((arg: any) => evaluate(arg))
+    const args = node.arguments.map((arg: any) => evaluate(arg));
     const callee = node.callee.name;
     if (callee === "print") {
         return myprint(args[0], args[1]);
@@ -122,7 +122,7 @@ function evalObjectExpression(node: any) {
 function evalTemplateLiteral(node: any) {
     const parts = node.expressions.map((e1: any) => evaluate(e1));
     const concatenated = node.quasis.slice(0,-1).reduce((a: any, current: any, index: number) => (
-      a += current.value.raw + parts[index]
+        a += current.value.raw + parts[index]
     ), "");
     const last =node.quasis[node.quasis.length - 1];
     return concatenated + last.value.raw;
