@@ -22,6 +22,8 @@ export function evaluate(node: any): any {
             return evalBlockStatement(node);
         case "ObjectExpression":
             return evalObjectExpression(node);
+        case "TemplateLiteral":
+            return evalTemplateLiteral(node);
         case "Identifier":
             return evalIdentifier(node);
         case "Literal":
@@ -115,6 +117,15 @@ function evalObjectExpression(node: any) {
         ...a,
         ...{ [current.key.name]: evaluate(current.value) }
     }), {});
+}
+
+function evalTemplateLiteral(node: any) {
+    const parts = node.expressions.map((e1: any) => evaluate(e1));
+    const concatenated = node.quasis.slice(0,-1).reduce((a: any, current: any, index: number) => (
+      a += current.value.raw + parts[index]
+    ), "");
+    const last =node.quasis[node.quasis.length - 1];
+    return concatenated + last.value.raw;
 }
 
 function evalIdentifier(node: any) {

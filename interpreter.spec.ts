@@ -191,3 +191,36 @@ describe("object expression", () => {
     });
   });
 });
+
+describe("test string template", () => {
+  test("simple string literal", () => {
+    const source =
+      'var a1 = "a";' +
+      'var a2 = "b";' +
+      '`111${a1}222${a2}333`'
+      ;
+    const ast = acorn.parse(source);
+    const actual = evaluate(ast);
+    expect(actual).toBe("111a222b333")
+  });
+  test("can handle expression", () => {
+    const source =
+      'var a1 = 1;' +
+      'var a2 = 2;' +
+      '`aa${a1 + a2}bb${a2 - a1}cc`'
+      ;
+    const ast = acorn.parse(source);
+    const actual = evaluate(ast);
+    expect(actual).toBe("aa3bb1cc")
+  });
+  test("can call built-ins", () => {
+    const source =
+      'var a1 = 1;' +
+      'var a2 = 2;' +
+      '`aa${a1 + a2}bb${a2 - a1}cc${print(1,2)}dd`'
+      ;
+    const ast = acorn.parse(source);
+    const actual = evaluate(ast);
+    expect(actual).toBe("aa3bb1cchaha 1, 2dd")
+  });
+});
