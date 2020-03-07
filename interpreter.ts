@@ -1,8 +1,14 @@
+import * as acorn from 'acorn';
+
 import { myprint } from './built-in';
 
 const globalScope = new Map();
 
-export function evaluate(node: any): any {
+function clearGlobalScope() {
+    globalScope.clear();
+}
+
+function evaluate(node: any): any {
     switch (node.type) {
         case "Program":
             return evalProgram(node);
@@ -111,7 +117,6 @@ function evalBlockStatement(node: any) {
     return evalStatements(node.body);
 }
 
-
 function evalObjectExpression(node: any) {
     return node.properties.reduce((a: any, current: any) => ({
         ...a,
@@ -135,4 +140,11 @@ function evalIdentifier(node: any) {
     } else {
         throw new Error(`${name} not defined`);
     }
+}
+
+export function interpret(source: string) {
+    clearGlobalScope();
+    const ast = acorn.parse(source);
+    const result = evaluate(ast);
+    return result;
 }

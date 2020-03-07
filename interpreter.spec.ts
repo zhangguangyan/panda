@@ -1,5 +1,4 @@
-import { evaluate } from "./interpreter";
-import * as acorn from "acorn";
+import { interpret } from "./interpreter";
 
 describe("without function declaration", () => {
     test('integer literal', () => {
@@ -8,8 +7,7 @@ describe("without function declaration", () => {
 6
 5
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(5);
     });
 
@@ -19,8 +17,7 @@ describe("without function declaration", () => {
 6
 5 + 4
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(9);
     });
 
@@ -29,8 +26,7 @@ describe("without function declaration", () => {
 4 * (2+3)
 5 + 4 * 4
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(21);
     });
 
@@ -39,8 +35,7 @@ describe("without function declaration", () => {
   var a = 1
   a + 9
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(10);
     });
 
@@ -50,8 +45,7 @@ describe("without function declaration", () => {
   var b = 9
   a + b
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(10);
     });
 
@@ -59,11 +53,11 @@ describe("without function declaration", () => {
         const source = `
   b + 9
   `;
-        const ast = acorn.parse(source);
         // seems have to wrap the call to assert error message
         // expect(() => evaluate(ast)).toThrow('b not defined');
         try {
-            evaluate(ast);
+            interpret(source);
+            throw new Error("didn't throw");
         } catch (e) {
             expect(e.message).toBe('b not defined');
         }
@@ -73,8 +67,8 @@ describe("without function declaration", () => {
         const source = `
     print(1,3+4)
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+
+        const actual = interpret(source);
         expect(actual).toBe("haha 1, 7");
     });
 
@@ -84,8 +78,7 @@ describe("without function declaration", () => {
   var b = 5
     print(1,a+b)
   `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe("haha 1, 7");
     });
 });
@@ -100,8 +93,7 @@ describe("with function declaration", () => {
     }
     f();
    `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(3);
     });
 
@@ -114,8 +106,7 @@ describe("with function declaration", () => {
     }
     f(1,2);
    `;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+        const actual = interpret(source);
         expect(actual).toBe(6);
     });
 });
@@ -130,9 +121,8 @@ describe("object expression", () => {
     }
     a
     `;
-        const ast = acorn.parse(source);
-        const acutal = evaluate(ast);
-        expect(acutal).toEqual({
+        const actual = interpret(source);
+        expect(actual).toEqual({
             k1: "123",
             k2: "456",
             k3: 789
@@ -151,9 +141,8 @@ describe("object expression", () => {
     }
     a
     `;
-        const ast = acorn.parse(source);
-        const acutal = evaluate(ast);
-        expect(acutal).toEqual({
+        const actual = interpret(source);
+        expect(actual).toEqual({
             k1: "123",
             k2: "456",
             k3: {
@@ -178,9 +167,8 @@ describe("object expression", () => {
     }
     a
     `;
-        const ast = acorn.parse(source);
-        const acutal = evaluate(ast);
-        expect(acutal).toEqual({
+        const actual = interpret(source);
+        expect(actual).toEqual({
             k1: "123",
             k2: 11,
             k3: {
@@ -195,32 +183,29 @@ describe("object expression", () => {
 describe("test string template", () => {
     test("simple string literal", () => {
         const source =
-      'var a1 = "a";' +
-      'var a2 = "b";' +
-      '`111${a1}222${a2}333`'
-      ;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+            'var a1 = "a";' +
+            'var a2 = "b";' +
+            '`111${a1}222${a2}333`'
+            ;
+        const actual = interpret(source);
         expect(actual).toBe("111a222b333");
     });
     test("can handle expression", () => {
         const source =
-      'var a1 = 1;' +
-      'var a2 = 2;' +
-      '`aa${a1 + a2}bb${a2 - a1}cc`'
-      ;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+            'var a1 = 1;' +
+            'var a2 = 2;' +
+            '`aa${a1 + a2}bb${a2 - a1}cc`'
+            ;
+        const actual = interpret(source);
         expect(actual).toBe("aa3bb1cc");
     });
     test("can call built-ins", () => {
         const source =
-      'var a1 = 1;' +
-      'var a2 = 2;' +
-      '`aa${a1 + a2}bb${a2 - a1}cc${print(1,2)}dd`'
-      ;
-        const ast = acorn.parse(source);
-        const actual = evaluate(ast);
+            'var a1 = 1;' +
+            'var a2 = 2;' +
+            '`aa${a1 + a2}bb${a2 - a1}cc${print(1,2)}dd`'
+            ;
+        const actual = interpret(source);
         expect(actual).toBe("aa3bb1cchaha 1, 2dd");
     });
 });
