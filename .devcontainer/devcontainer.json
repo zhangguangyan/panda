@@ -1,5 +1,3 @@
-// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.101.1/containers/typescript-node-12
 {
 	"name": "Node.js 12 & TypeScript",
 	"dockerFile": "Dockerfile",
@@ -11,8 +9,11 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
+		"streetsidesoftware.code-spell-checker",
 		"dbaeumer.vscode-eslint",
-		"ms-vscode.vscode-typescript-tslint-plugin"
+		"eamodio.gitlens",
+		"bierner.markdown-mermaid",
+		"quicktype.quicktype"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
