@@ -12,7 +12,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends apt-utils \
     # xonsh
     && apt-get install -y --no-install-recommends python3-pip  \
-    && pip3 install xonsh \
+    && pip3 install "xonsh[pygments,ptk,linux]" \
     #
     # Install Docker CE CLI
     && apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common lsb-release \
@@ -23,7 +23,8 @@ RUN apt-get update \
     #    && usermod -aG docker node \ # the container doesn't have docker group, which is on the host as we are suing dind
     #
     # Install Docker Compose
-    && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+    && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
+        -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose \
     #
     # [Optional] Update a non-root user to UID/GID if needed.
