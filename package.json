@@ -20,9 +20,10 @@
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc",
-    "lint": "eslint '**/*.{ts,js}' || exit 0",
-    "test": "tsc --build --clean && jest || exit 0",
-    "check": "tsc --build --clean && eslint '**/*.{ts,js}' && jest || exit 0"
+    "lint": "eslint '**/*.{ts,js}'",
+    "test": "tsc --build --clean && jest",
+    "test:coverage": "tsc --build --clean && jest --coverage",
+    "check": "tsc --build --clean && eslint '**/*.{ts,js}' && jest"
   },
   "keywords": [],
   "author": "",

@@ -91,7 +91,7 @@ function evalCallExpression(node: any) {
 
 function evalVariableDeclaration(node: any) {
     for (const declaration of node.declarations) {
-        evalVariableDeclarator(declaration);
+        evaluate(declaration);
     }
 }
 
