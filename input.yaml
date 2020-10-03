@@ -1,0 +1,11 @@
+k1: aaa${a1}bbb${a2}
+k2: ${print(a1,a2)}
+k3:
+  k31: ${print(a1,a2)}
+  k32:
+    k321: ${print(a1,a2)}
+    k322:
+      k3221: ${print(a1,a2)}
+  k33:
+    - k331: ${print(a1, 3)}
+    - k332: ${print(a1, 5)}
