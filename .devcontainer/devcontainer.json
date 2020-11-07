@@ -13,7 +13,13 @@
 		"dbaeumer.vscode-eslint",
 		"eamodio.gitlens",
 		"bierner.markdown-mermaid",
-		"quicktype.quicktype"
+		"quicktype.quicktype",
+		"firsttris.vscode-jest-runner",
+		"eg2.vscode-npm-script",
+		"esbenp.prettier-vscode",
+		"visualstudioexptteam.vscodeintellicode",
+		"ms-azuretools.vscode-docker",
+		"christian-kohler.path-intellisense"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
