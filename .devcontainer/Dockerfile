@@ -20,7 +20,7 @@ RUN apt-get update \
     && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" \
     && apt-get update \
     && apt-get install -y docker-ce-cli \
-    #    && usermod -aG docker node \ # the container doesn't have docker group, which is on the host as we are suing dind
+    #    && usermod -aG docker node \\ # the container doesn't have docker group, which is on the host as we are suing dind
     #
     # Install Docker Compose
     && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
