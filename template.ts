@@ -1,4 +1,5 @@
-import acorn from 'acorn';
+import * as acorn from 'acorn';
+import { safeLoad } from 'js-yaml';
 import { myprint } from './built-in';
 
 export function traverse(x: any) {
@@ -39,7 +40,7 @@ export function setupContext() {
 
 function evaluateFragment(ss: string) {
     //const node: any = acorn.parse('`' + ss + '`');
-    const node: any = acorn.parse(`\`${ss}\``);
+    const node: any = acorn.parse(`\`${ss}\``, { ecmaVersion: "latest" });
     const templateLiteral = node.body[0].expression;
     return evaluate(templateLiteral);
 }
@@ -90,3 +91,23 @@ function evalCallExpression(node: any) {
 function evalLiteral(node: any) {
     return node.value;
 }
+
+/**
+ * 
+ * @param params {a1: 1, a2: 2}
+ * @param template 
+ */
+export function render(params: any, template: string) {
+    const input: any = safeLoad(template);
+    const args = Object.entries<any>(input.parameters);
+    for (const [name, values] of args) {
+        if (params[name]) {
+            globalScope.set(name, params[name]);
+        } else {
+            throw new Error();
+        }
+    };
+
+    traverse(input.resources);
+    return input.resources;
+} 

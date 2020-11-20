@@ -1,53 +1,55 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-import { traverse, setupContext } from './template';
+import { traverse, setupContext, render } from './template';
+
+const expected = {
+    k1: "aaa1bbb2",
+    k2: "haha 1, 2",
+    k3: {
+        k31: 'haha 1, 2',
+        k32: {
+            k321: 'haha 1, 2',
+            k322: {
+                k3221: 'haha 1, 2'
+            }
+        },
+        k33: [
+            {
+                k331: 'haha 1, 3'
+            },
+            {
+                k332: 'haha 1, 5'
+            }
+        ]
+    }
+};
+
+// const o2 = {
+//     k1: 'aaa${a1}bbb${a2}',
+//     k2: '${print(a1,a2)}',
+//     k3: {
+//         k31: '${print(a1,a2)}',
+//         k32: {
+//             k321: '${print(a1,a2)}',
+//             k322: {
+//                 k3221: '${print(a1,a2)}'
+//             }
+//         },
+//         k33: [
+//             {
+//                 k331: '${print(a1, 3)}'
+//             }
+//         ]
+//     }
+// };
 
 test("tag template", () => {
     setupContext();
     const input = fs.readFileSync('input.yaml').toString();
-    // const o2 = {
-    //     k1: 'aaa${a1}bbb${a2}',
-    //     k2: '${print(a1,a2)}',
-    //     k3: {
-    //         k31: '${print(a1,a2)}',
-    //         k32: {
-    //             k321: '${print(a1,a2)}',
-    //             k322: {
-    //                 k3221: '${print(a1,a2)}'
-    //             }
-    //         },
-    //         k33: [
-    //             {
-    //                 k331: '${print(a1, 3)}'
-    //             }
-    //         ]
-    //     }
-    // };
-
     const o3 = yaml.safeLoad(input);
     traverse(o3);
-    expect(o3).toEqual({
-        k1: "aaa1bbb2",
-        k2: "haha 1, 2",
-        k3: {
-            k31: 'haha 1, 2',
-            k32: {
-                k321: 'haha 1, 2',
-                k322: {
-                    k3221: 'haha 1, 2'
-                }
-            },
-            k33: [
-                {
-                    k331: 'haha 1, 3'
-                },
-                {
-                    k332: 'haha 1, 5'
-                }
-            ]
-        }
-    });
+    expect(o3).toEqual(expected);
 });
 
 test("???", () => {
@@ -84,13 +86,19 @@ test("concat", () => {
 });
 
 test("what", () => {
-    const aa = a.reduce((a1:any) => {
+    const aa = a.reduce((a1: any) => {
         a1 += "123";
         return a1;
-    },"");
+    }, "");
 });
 
 test("array", () => {
     let s = a.map(() => "123");
     const r = s.join("");
-}); 
+});
+
+test("with params", () => {
+    const input = fs.readFileSync('input-2.yaml').toString();
+    const actual = render({ a1: 1, a2: 2 }, input);
+    expect(actual).toEqual(expected);
+});

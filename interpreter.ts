@@ -144,7 +144,7 @@ function evalIdentifier(node: any) {
 
 export function interpret(source: string) {
     clearGlobalScope();
-    const ast = acorn.parse(source);
+    const ast = acorn.parse(source, {ecmaVersion: "latest"});
     const result = evaluate(ast);
     return result;
 }
